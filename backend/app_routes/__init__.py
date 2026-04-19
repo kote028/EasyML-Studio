@@ -1,0 +1,1 @@
+# Init map for routes
