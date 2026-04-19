@@ -34,7 +34,11 @@ export default function LLMPlayground() {
           <Sparkles className="text-purple-500" size={40} />
           Large Language Model Playground
         </h2>
-        <p className="text-slate-400">Interact with powerful LLMs (like GPT-4) instantly. Provide some text or context, and choose an action below.</p>
+        <div className="max-w-3xl mx-auto p-4 bg-purple-900/20 border border-purple-500/30 rounded-xl mb-4">
+          <p className="text-purple-200">
+            <strong className="text-purple-400">What is this?</strong> LLMs (like ChatGPT) are AIs that understand and write text. Instead of writing complex code to use them, just paste some text below and click a tool. We will show you how the AI responds!
+          </p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

@@ -22,3 +22,8 @@ export const generateLLM = async (prompt, task) => {
   const response = await axios.post(`${API_URL}/llm/generate`, { prompt, task });
   return response.data;
 };
+
+export const chatLLM = async (message) => {
+  const response = await axios.post(`${API_URL}/llm/chat`, { message });
+  return response.data;
+};

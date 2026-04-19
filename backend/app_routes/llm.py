@@ -26,3 +26,27 @@ def generate_text():
         "status": "success",
         "result": response_text
     })
+
+@llm_bp.route('/chat', methods=['POST'])
+def chat_bot():
+    req_data = request.json
+    message = req_data.get('message', '').lower()
+    
+    # Simple simulated intelligence for free usage
+    response = "That's an interesting data problem! Need more help? I'm currently using simulated intelligence to stay free."
+    
+    if "house" in message or "price" in message or "stock" in message or "continuous" in message:
+        response = "It sounds like predicting a continuous numerical value. You should use a **Regression** model! Head over to the Models tab to try it."
+    elif "spam" in message or "category" in message or "dog or cat" in message or "patient" in message:
+        response = "You are trying to predict specific categories or labels. A **Classification** model is perfect for this. I recommend uploading your data and trying out Classification!"
+    elif "customer" in message or "group" in message or "segment" in message or "unlabeled" in message:
+        response = "Since you want to find hidden patterns without specific target labels, you should use **Clustering**. This will group similar data points together."
+    elif "upload" in message or "csv" in message:
+        response = "Head over to the **Data** tab to upload your CSV file! The platform will automatically show you a preview so you know your columns."
+    elif "what is machine learning" in message:
+        response = "Machine Learning empowers computers to find patterns in data and make predictions without being explicitly programmed. We have tools that do all the coding for you!"
+    
+    return jsonify({
+        "status": "success",
+        "result": response
+    })

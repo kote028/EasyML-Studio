@@ -1,50 +1,80 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import Lenis from 'lenis';
 import { Brain, Database, Cpu, MessageSquare } from 'lucide-react';
 import Hero3D from './components/Hero3D';
 import DataUpload from './components/DataUpload';
 import Modeling from './components/Modeling';
 import LLMPlayground from './components/LLMPlayground';
+import Chatbot from './components/Chatbot';
+import CustomCursor from './components/CustomCursor';
 
 function App() {
   const [activeTab, setActiveTab] = useState('home');
 
+  useEffect(() => {
+    // Initialize Lenis for Awwwards-style buttery smooth scrolling
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), 
+      direction: 'vertical',
+      gestureDirection: 'vertical',
+      smooth: true,
+      mouseMultiplier: 1,
+      smoothTouch: false,
+      touchMultiplier: 2,
+      infinite: false,
+    });
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+
+    return () => {
+      lenis.destroy();
+    };
+  }, []);
+
   return (
     <Router>
-      <div className="min-h-screen flex flex-col relative overflow-hidden">
-        {/* Navigation */}
-        <nav className="fixed top-0 w-full z-50 bg-slate-950/80 backdrop-blur-md border-b border-white/10">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-16">
-              <div className="flex items-center gap-2">
-                <Brain className="h-8 w-8 text-blue-500" />
-                <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
-                  EasyML Studio
+      <div className="min-h-screen flex flex-col relative overflow-hidden bg-[#050505]">
+        <CustomCursor />
+        
+        {/* Brutalist Navigation */}
+        <nav className="fixed top-0 w-full z-50 bg-transparent mix-blend-difference pt-6">
+          <div className="max-w-[95%] mx-auto px-4">
+            <div className="flex justify-between items-center h-16">
+              <div className="flex items-center gap-4 group">
+                <Brain className="h-10 w-10 text-white transition-transform group-hover:rotate-180 duration-700" />
+                <span className="text-2xl font-black tracking-tighter uppercase text-white">
+                  EasyML.
                 </span>
               </div>
-              <div className="flex space-x-4">
-                <Link to="/" onClick={() => setActiveTab('home')} className={`px-3 py-2 rounded-md ${activeTab === 'home' ? 'text-blue-400' : 'text-gray-300 hover:text-white'}`}>Home</Link>
-                <Link to="/data" onClick={() => setActiveTab('data')} className={`px-3 py-2 rounded-md flex items-center gap-2 ${activeTab === 'data' ? 'text-blue-400' : 'text-gray-300 hover:text-white'}`}><Database size={18}/> Data</Link>
-                <Link to="/models" onClick={() => setActiveTab('models')} className={`px-3 py-2 rounded-md flex items-center gap-2 ${activeTab === 'models' ? 'text-blue-400' : 'text-gray-300 hover:text-white'}`}><Cpu size={18}/> Models</Link>
-                <Link to="/llm" onClick={() => setActiveTab('llm')} className={`px-3 py-2 rounded-md flex items-center gap-2 ${activeTab === 'llm' ? 'text-blue-400' : 'text-gray-300 hover:text-white'}`}><MessageSquare size={18}/> LLM Tools</Link>
+              <div className="flex space-x-8 text-sm font-bold uppercase tracking-widest text-white">
+                <Link to="/" onClick={() => setActiveTab('home')} className="hover:line-through">Index</Link>
+                <Link to="/data" onClick={() => setActiveTab('data')} className="hover:line-through">Upload</Link>
+                <Link to="/models" onClick={() => setActiveTab('models')} className="hover:line-through">Train</Link>
+                <Link to="/llm" onClick={() => setActiveTab('llm')} className="hover:line-through">Ask AI</Link>
               </div>
             </div>
           </div>
         </nav>
 
         {/* Main Content Area */}
-        <main className="flex-grow pt-16 z-10 w-full">
+        <main className="flex-grow z-10 w-full flex flex-col">
           <Routes>
             <Route path="/" element={<Hero3D />} />
-            <Route path="/data" element={<DataUpload />} />
-            <Route path="/models" element={<Modeling />} />
-            <Route path="/llm" element={<LLMPlayground />} />
+            <Route path="/data" element={<div className="pt-32 pb-20"><DataUpload /></div>} />
+            <Route path="/models" element={<div className="pt-32 pb-20"><Modeling /></div>} />
+            <Route path="/llm" element={<div className="pt-32 pb-20"><LLMPlayground /></div>} />
           </Routes>
         </main>
         
-        {/* Ambient background glows */}
-        <div className="fixed top-1/4 left-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl pointer-events-none z-0"></div>
-        <div className="fixed bottom-1/4 right-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl pointer-events-none z-0"></div>
+        {/* Assistant */}
+        <Chatbot />
       </div>
     </Router>
   );
